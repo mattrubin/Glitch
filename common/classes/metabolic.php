@@ -9,7 +9,7 @@ function render_metabolic($metabolic, $value){
 	$value = intVal($value);
 	if($value == 0) return;
 	echo '<li '.(($value==0)?'style="opacity:.3;"':'').'>';
-	echo '<img class="metabolic-image" src="images/'.$metabolic.'.png" alt="'.$metabolic.'"/>';
+	echo '<img class="metabolic-image" src="images/'.strtolower($metabolic).'.png" alt="'.$metabolic.'"/>';
 	//if($value >= 0)
 		echo '<span class="value '.(($value >= 0)?'positive':'negative').'">'.$value.'</span>';
 	//else
