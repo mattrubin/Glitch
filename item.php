@@ -1,6 +1,8 @@
 <?php
+include("common/init.php");
+include_once("common/classes/DataObject.php");
 
-include_once "db/functions.php";
+include_once "common/db/functions.php";
 
 	if(isset($_POST['item_id'])) {
 		
@@ -66,12 +68,7 @@ include_once "db/functions.php";
 	
 	
 	
-	$query = sprintf("SELECT * FROM `items` WHERE `id` = %d", $item_id);
-	$result = execute($query);
-	
-	if(mysql_num_rows($result)<1) header("Location:index.php");
-	
-	$item = mysql_fetch_array($result);
+	$item = Item::get($item_id);
 	
 	
 	
@@ -86,8 +83,8 @@ include_once "db/functions.php";
 	}
 	$recipe = mysql_fetch_array($result);
 	
-	if($item['consume_buff']) {
-		$query = sprintf("SELECT * FROM `buffs` WHERE `id` = %d", $item['consume_buff']);
+	if($item->consume_buff) {
+		$query = sprintf("SELECT * FROM `buffs` WHERE `id` = %d", $item->consume_buff);
 		$result = execute($query);
 		$buff = mysql_fetch_array($result);
 	}
@@ -97,7 +94,7 @@ include_once "db/functions.php";
 
 <?php
 	include("common/head_open.php");
-	$title = "Item: ".$item['name'];
+	$title = "Item: ".$item->name;
 	include("common/head.php");
 ?>
 <script>
@@ -118,26 +115,28 @@ function checkVal(val, idStr){
 ?>
 <body>
 	<div class="container">
-		<a href="item.php?id=<?php echo $item['id']; ?>&go=previous" >&lt; Previous</a> |
+		<a href="item.php?id=<?php echo $item->id; ?>&go=previous" >&lt; Previous</a> |
 		<a href="index.php">Index</a> |
-		<a href="item.php?id=<?php echo $item['id']; ?>&go=next" >Next &gt;</a>
+		<a href="item.php?id=<?php echo $item->id; ?>&go=next" >Next &gt;</a>
 		
 		<h1 class="item-title">
-			<img src="<?php echo $item['thumb_url'] ?>" width="40" height="40"/>
-			<?php echo $item['name']; ?>
+			<img src="<?php echo $item->thumb_url ?>" width="40" height="40"/>
+			<?php echo $item->name; ?>
 		</h1>
 		<?php 
 			include_once("common/classes/metabolic.php");
-			render_metabolics($item['consume_mood'], $item['consume_energy'], $item['consume_xp'], isset($buff)?$buff['name']:null);
+			render_metabolics($item->consume_mood, $item->consume_energy, $item->consume_xp, isset($buff)?$buff['name']:null);
 		?>
 		<ul class="item-details">
 			<li class="item-price">
-				Worth about <strong><?php echo intVal($item['street_price']); ?> currants</strong>
+				Worth about <strong><?php echo intVal($item->street_price); ?> currants</strong>
 			</li>
 			<li class="item-stack">
-				Fits up to <strong><?php echo intVal($item['stack_height']); ?></strong> in a backpack slot
+				Fits up to <strong><?php echo intVal($item->stack_height); ?></strong> in a backpack slot
 			</li>
 		</ul>
+		
+		
 		
 		
 		
@@ -148,7 +147,7 @@ function checkVal(val, idStr){
 			render_cost($recipe['cost_mood'], $recipe['cost_energy'], $recipe['cost_xp'], $recipe['cost_currants']);
 		?>
 		<form method="post" id="form">
-			<input type='hidden' name='item_id' value='<?php echo $item['id'] ?>'/>
+			<input type='hidden' name='item_id' value='<?php echo $item->id ?>'/>
 			<input type='hidden' name='recipe_id' value='<?php echo $recipe['id'] ?>'/>
 			<b>Cost:</b>
 			<span id="cost_energy_span" <?php if(intVal($recipe['cost_energy'])==0) echo 'style="opacity:.5;"'; ?>> Energy:
@@ -168,7 +167,7 @@ function checkVal(val, idStr){
 				onkeyup='checkVal(this.value, "cost_xp_span")'/>
 			</span>
 			<br/>
-			<b>Yield:</b>		<input type='text' size='1' name='yield' value='<?php echo $recipe['yield'] ?>'/> &times; <img src='<?php echo $item['thumb_url'] ?>' width="30"/> 
+			<b>Yield:</b>		<input type='text' size='1' name='yield' value='<?php echo $recipe['yield'] ?>'/> &times; <img src='<?php echo $item->thumb_url ?>' width="30"/> 
 			<br/>
 			<input type="submit" value="Change">
 			<br/>

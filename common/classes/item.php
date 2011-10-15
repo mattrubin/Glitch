@@ -1,23 +1,34 @@
 <?php
+require_once("DataObject.php");
 
-function render_item($item){
-	echo '<li>';
-	echo '<a href="item.php?id='.$item['id'].'" >';
-	echo '<img class="item-image" src="'.$item['thumb_url'].'" height="40" width="40" alt="'.$item['name'].'"/>';
-	echo '<span class="item-name">'.$item['name'].'</span>';
-	echo '</a>';
-	echo '</li>';
-	echo "\n";
-}
-
-
-function render_item_list($items){
-	echo '<ul class="items-list">';
-	while ($item = mysql_fetch_array($items))
-	{
-		render_item($item);
+class Item extends DataObject
+{
+	protected static $TABLE = 'items';
+	
+	public function render(){
+		echo '<li>';
+		echo '<a href="item.php?id='.$this->id.'" >';
+		echo '<img class="item-image" src="'.$this->thumb_url.'" height="40" width="40" alt="'.$this->name.'"/>';
+		echo '<span class="item-name">'.$this->name.'</span>';
+		echo '</a>';
+		echo '</li>';
+		echo "\n";
 	}
-	echo "</ul>\n";	
+	
+	public static function renderList($items){
+		if(is_array($items)){
+			echo '<ul class="items-list">';
+			foreach($items as $index=>$item)
+			{
+				$item->render();
+			}
+			echo "</ul>\n";
+		}/* else {
+			if(method_exists($items, "render"))
+				$items->render();
+		}*/
+	}
+	
 }
 
 ?>

@@ -1,6 +1,6 @@
 <?php
 
-include_once "db/functions.php";
+include_once "common/db/functions.php";
 
 	if(isset($_POST['thumb_url']) && isset($_POST['id'])) {
 		

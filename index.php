@@ -15,7 +15,7 @@
 		</ul>
 		
 		<?php
-			include "db/functions.php";
+			require_once "common/db/functions.php";
 			
 			if($cat_sort){
 				// Get Categories
@@ -37,10 +37,9 @@
 						printf("<h2>%s</h2>\n", $subcat['name']);
 						
 						// Get Items
-						$query = sprintf("SELECT * FROM `items` WHERE `category`=%d AND `subcategory`=%d ORDER BY `name` ASC", $category['id'], $subcat['sub_id']);
-						$items = execute($query);
-		
-						render_item_list($items);
+						$items = Item::all(sprintf("WHERE `category`=%d AND `subcategory`=%d ORDER BY `name` ASC", $category['id'], $subcat['sub_id']));
+						Item::renderList($items);	
+						
 						echo '</div>';
 					}
 					echo '</div>';
@@ -50,12 +49,8 @@
 			} else {
 				echo "<h1>Food &amp; Drink</h1>\n";
 				
-				// GET ITEMS
-				$query = "SELECT * FROM `items` ORDER BY `name` ASC";
-				$items = execute($query);
-				
-				render_item_list($items);
-				echo "<br/><br/>\n";
+				$items = Item::all("ORDER BY `name` ASC");
+				Item::renderList($items);	
 			}
 			
 		?>
