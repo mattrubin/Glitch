@@ -12,7 +12,7 @@ class Item extends DataObject
 	
 	private $buff_object = NULL;
 	
-	public function render(){
+	public function render_li(){
 		echo '<li>';
 		echo '<a href="item.php?id='.$this->id.'" >';
 		echo '<img class="item-image" src="'.$this->thumb_url.'" height="40" width="40" alt="'.$this->name.'"/>';
@@ -27,13 +27,41 @@ class Item extends DataObject
 			echo '<ul class="items-list">';
 			foreach($items as $index=>$item)
 			{
-				$item->render();
+				$item->render_li();
 			}
 			echo "</ul>\n";
-		}/* else {
-			if(method_exists($items, "render"))
-				$items->render();
-		}*/
+		}
+	}
+	
+	public function renderAsIngredient(){
+		$value = isset($this->quantity)?$this->quantity:'';
+		
+		echo "<td ".((intVal($value)==0)?'style="opacity:.5;"':'')." id='ingredient-".$this->id."'>
+		<input type='text' size='2'
+			id='quantity-".$this->id."'
+			name='quantity-".$this->id."'
+			value='".$value."' onkeyup='checkVal(this.value, \"ingredient-".$this->id."\")'/>
+		<img src='".$this->thumb_url."' height='30' width='30'/>";
+		echo " ".$this->name."</td>";		
+	}
+	
+	public static function renderIngredientsList($items){
+		if(is_array($items)){
+			echo '<table style="font-size:75%;">';
+			
+			$i=0;
+			$step = 5;
+			foreach($items as $index=>$item)
+			{
+				if($i%$step==0) echo "<tr>";
+				
+				$item->renderAsIngredient();
+				
+				if($i%$step==$step-1)echo "</tr>\n";
+				$i++;
+			}
+			echo "</table>\n";
+		}
 	}
 	
 	public function render_info(){

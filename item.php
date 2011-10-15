@@ -167,70 +167,16 @@ function checkVal(val, idStr){
 		
 			
 			<?php
-	if(!$recipe['harvest']) {
-	
-	
-			$query = sprintf("SELECT * FROM `ingredients` LEFT JOIN `items` ON ingredients.item_id=items.id WHERE recipe_id=%d", $recipe['id']);
-			$result = execute($query);
-	
-			$in_use = array();
-			
-		if(mysql_num_rows($result)>0){
-			echo '<table style="font-size:75%;">';
-			
-			
-			$i=0;
-			$step = 5;
-			while ($row = mysql_fetch_array($result))
-			{
-				array_push($in_use, $row['item_id']);
-				if($i%$step==0) echo "<tr>";
-	
-				echo "<td id='ingredient-".$row['item_id']."'>
-				<input type='text' size='2'
-					id='quantity-".$row['item_id']."'
-					name='quantity-".$row['item_id']."'
-					value='".$row['quantity']."' onkeyup='checkVal(this.value, \"ingredient-".$row['item_id']."\")'/>
-				<img src='".$row['thumb_url']."' height='30' width='30'/>";
-				echo " ".$row['name']."</td>";
-	
-	
-				if($i%$step==$step-1)echo "</tr>\n";
-				$i++;
-	
-			}
-			
-			echo '</table><hr />';
-		}
-	
-		$query = "SELECT * FROM items";
-		$result = execute($query);
-		
-		echo '<table style="font-size:75%;">';
-		$i=0;
-		$step = 5;
-		while ($row = mysql_fetch_array($result))
-		{
-			if(in_array($row['id'], $in_use)) continue;
-			if($i%$step==0) echo "<tr>";
-			
-			echo "<td style='opacity:.5' id='ingredient-".$row['id']."'>
-			<input type='text' size='2'
-				id='quantity-".$row['id']."'
-				name='quantity-".$row['id']."'
-				onkeyup='checkVal(this.value, \"ingredient-".$row['id']."\")'/>
-			<img src='".$row['thumb_url']."' height='30' width='30'/>";
-			echo " ".$row['name']."</td>";
-			
-			
-			if($i%$step==$step-1)echo "</tr>\n";
-			$i++;
-			
-		}
-		echo '</table>';
-	}
-		
-		?>
+				if(!$recipe['harvest']) {
+					$ingredients_in_use = Item::all(sprintf("RIGHT JOIN `ingredients` ON ingredients.item_id=items.id WHERE recipe_id=%d", $recipe['id']));
+					Item::renderIngredientsList($ingredients_in_use);
+					
+					echo '</table><hr />';
+					
+					$ingredients_in_use = Item::all(sprintf("WHERE id NOT IN (SELECT item_id FROM `ingredients` WHERE recipe_id=%d)", $recipe['id']));
+					Item::renderIngredientsList($ingredients_in_use);
+				}
+			?>
 		</form>
 	</div>
 </body>
