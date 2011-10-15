@@ -5,6 +5,8 @@ class Item extends DataObject
 {
 	protected static $TABLE = 'items';
 	
+	private $buff_object = NULL;
+	
 	public function render(){
 		echo '<li>';
 		echo '<a href="item.php?id='.$this->id.'" >';
@@ -27,6 +29,15 @@ class Item extends DataObject
 			if(method_exists($items, "render"))
 				$items->render();
 		}*/
+	}
+	
+	
+	public function getBuff(){
+		if(!$this->consume_buff) return NULL;
+		if($this->buff_object) return $this->buff_object;
+		
+		$this->buff_object = Buff::get($this->consume_buff);
+		return $this->buff_object;
 	}
 	
 }

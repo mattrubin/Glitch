@@ -1,6 +1,7 @@
 <?php
 include("common/init.php");
 include_once("common/classes/DataObject.php");
+include_once("common/classes/Buff.php");
 
 include_once "common/db/functions.php";
 
@@ -69,6 +70,7 @@ include_once "common/db/functions.php";
 	
 	
 	$item = Item::get($item_id);
+	$buff = $item->getBuff();
 	
 	
 	
@@ -83,11 +85,6 @@ include_once "common/db/functions.php";
 	}
 	$recipe = mysql_fetch_array($result);
 	
-	if($item->consume_buff) {
-		$query = sprintf("SELECT * FROM `buffs` WHERE `id` = %d", $item->consume_buff);
-		$result = execute($query);
-		$buff = mysql_fetch_array($result);
-	}
 	
 ?>
 
@@ -125,7 +122,7 @@ function checkVal(val, idStr){
 		</h1>
 		<?php 
 			include_once("common/classes/metabolic.php");
-			render_metabolics($item->consume_mood, $item->consume_energy, $item->consume_xp, isset($buff)?$buff['name']:null);
+			render_metabolics($item->consume_mood, $item->consume_energy, $item->consume_xp, isset($buff)?$buff->name:null);
 		?>
 		<ul class="item-details">
 			<li class="item-price">
