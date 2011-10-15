@@ -116,22 +116,10 @@ function checkVal(val, idStr){
 		<a href="index.php">Index</a> |
 		<a href="item.php?id=<?php echo $item->id; ?>&go=next" >Next &gt;</a>
 		
-		<h1 class="item-title">
-			<img src="<?php echo $item->thumb_url ?>" width="40" height="40"/>
-			<?php echo $item->name; ?>
-		</h1>
-		<?php 
-			include_once("common/classes/metabolic.php");
-			render_metabolics($item->consume_mood, $item->consume_energy, $item->consume_xp, isset($buff)?$buff->name:null);
+		<?php
+			// Render basic info about the item
+			$item->render_info();
 		?>
-		<ul class="item-details">
-			<li class="item-price">
-				Worth about <strong><?php echo intVal($item->street_price); ?> currants</strong>
-			</li>
-			<li class="item-stack">
-				Fits up to <strong><?php echo intVal($item->stack_height); ?></strong> in a backpack slot
-			</li>
-		</ul>
 		
 		
 		
@@ -140,7 +128,14 @@ function checkVal(val, idStr){
 		<br/><br/><br/><br/>
 		<h2><?php echo ($recipe['harvest'])?'Harvest':'Recipe'; ?></h2>
 		<?php 
-			include_once("common/classes/metabolic.php");
+			function render_cost($mood, $energy, $xp, $currants=0){
+				echo '<ul class="cost">';
+				Item::render_metabolic(MOOD, $mood);
+				Item::render_metabolic(ENERGY, $energy);
+				Item::render_metabolic(XP, $xp);
+				echo "</ul>\n";	
+			}
+			
 			render_cost($recipe['cost_mood'], $recipe['cost_energy'], $recipe['cost_xp'], $recipe['cost_currants']);
 		?>
 		<form method="post" id="form">
