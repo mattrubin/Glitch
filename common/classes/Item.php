@@ -1,5 +1,5 @@
 <?php
-require_once("DataObject.php");
+require_once "common/classes/DataObject.php" ;
 
 define('MOOD', 'Mood');
 define('ENERGY', 'Energy');
@@ -25,7 +25,7 @@ class Item extends DataObject
 	public static function renderList($items){
 		if(is_array($items)){
 			echo '<ul class="items-list">';
-			foreach($items as $index=>$item)
+			foreach($items as $item)
 			{
 				$item->render_li();
 			}

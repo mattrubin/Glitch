@@ -135,14 +135,14 @@ span.value.positive:before {
 
 
 /* SECTIONS */
-div.item_category {
+div.item-category {
 	padding-bottom: 30px;
 }
 
-div.item_subcategory {
+div.item-subcategory {
 	margin-bottom: 30px;
 }
-div.item_subcategory h2 {
+div.item-subcategory h2 {
 	-webkit-padding-start:40px;
 }
 

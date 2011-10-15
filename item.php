@@ -2,6 +2,7 @@
 include("common/init.php");
 include_once("common/classes/DataObject.php");
 include_once("common/classes/Buff.php");
+include_once("common/classes/Item.php");
 
 include_once "common/db/functions.php";
 

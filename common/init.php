@@ -1,5 +1,4 @@
 <?php
-	include("classes/item.php");
 
 	define('CAT_SORT',		'categories');
 	define('ALPHA_SORT',	'alphabetical');
